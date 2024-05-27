@@ -1,0 +1,59 @@
+[gd_scene load_steps=6 format=3 uid="uid://wtvmhlkucdl4"]
+
+[ext_resource type="Script" path="res://scripts/killzone.gd" id="1_4qm7d"]
+[ext_resource type="AudioStream" uid="uid://ejuetnm3f6yu" path="res://assets/sounds/hurt.wav" id="2_g45q1"]
+
+[sub_resource type="Animation" id="Animation_q1rng"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AudioStreamPlayer2D:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_l1ij8"]
+resource_name = "dead"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AudioStreamPlayer2D:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dvn5j"]
+_data = {
+"RESET": SubResource("Animation_q1rng"),
+"dead": SubResource("Animation_l1ij8")
+}
+
+[node name="Killzone" type="Area2D"]
+collision_mask = 2
+script = ExtResource("1_4qm7d")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.6
+one_shot = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_g45q1")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_dvn5j")
+}
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
